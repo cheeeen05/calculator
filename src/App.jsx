@@ -21,81 +21,22 @@ function CalcButton({ buttonLabel, onClick, buttonClass }) {
 }
 
 function App() {
-  const [displayValue, setDisplayValue] = useState('0')
-  const [firstNumber, setFirstNumber] = useState(null)
-  const [operator, setOperator] = useState(null)
-  const [waitingForSecondNumber, setWaitingForSecondNumber] = useState(false)
+
+  const [displayValue, setDisplayValue] = useState(1)
 
   const buttonClickHandler = (e) => {
     e.preventDefault()
 
-    const value = e.currentTarget.innerHTML
+    const value = e.target.innerHTML
 
-  
-    if (value === 'C') {
-      setDisplayValue('0')
-      setFirstNumber(null)
-      setOperator(null)
-      setWaitingForSecondNumber(false)
-      return
-    }
-
-  
-    if (value === '=') {
-      if (firstNumber !== null && operator !== null) {
-        const secondNumber = parseFloat(displayValue)
-        let result
-
-        if (operator === '+') {
-          result = firstNumber + secondNumber
-        } else if (operator === '−') {
-          result = firstNumber - secondNumber
-        } else if (operator === '×') {
-          result = firstNumber * secondNumber
-        } else if (operator === '÷') {
-          if (secondNumber === 0) {
-            setDisplayValue('Error')
-            setFirstNumber(null)
-            setOperator(null)
-            return
-          }
-
-          result = firstNumber / secondNumber
-        }
-
-        setDisplayValue(String(result))
-        setFirstNumber(null)
-        setOperator(null)
-        setWaitingForSecondNumber(false)
-      }
-
-      return
-    }
-
-  
-    if (['+', '−', '×', '÷'].includes(value)) {
-      setFirstNumber(parseFloat(displayValue))
-      setOperator(value)
-      setWaitingForSecondNumber(true)
-      return
-    }
-
-  
-    if (!isNaN(value)) {
-      if (displayValue === '0' || waitingForSecondNumber) {
-        setDisplayValue(value)
-        setWaitingForSecondNumber(false)
-      } else {
-        setDisplayValue(displayValue + value)
-      }
-    }
+    alert(value)
   }
 
   return (
     <div className="App">
 
       <div className="Header">
-        Calculator of Cheenee Mandap -WMD3A
+        Calculator of Cheenee Mandap - WMD3A
       </div>
 
       <div className="Calculator">
