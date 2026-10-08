@@ -22,14 +22,150 @@ function CalcButton({ buttonLabel, onClick, buttonClass }) {
 
 function App() {
 
-  const [displayValue, setDisplayValue] = useState(1)
+  const [disp, setDisp] = useState(0)
+  const [operand1, setOperand1] = useState(null)
+  const [operand2, setOperand2] = useState(null)
+  const [operation, setOperation] = useState(null)
+  const [waitingForSecondNumber, setWaitingForSecondNumber] = useState(false)
+  const [justCalculated, setJustCalculated] = useState(false)
+
 
   const buttonClickHandler = (e) => {
     e.preventDefault()
 
-    const value = e.target.innerHTML
+    const value = e.currentTarget.innerHTML
 
-    alert(value)
+   
+    if (!isNaN(value)) {
+
+     
+      if (justCalculated) {
+        setDisp(value)
+        setJustCalculated(false)
+        return
+      }
+
+   
+      if (waitingForSecondNumber) {
+        setDisp(value)
+        setWaitingForSecondNumber(false)
+        return
+      }
+
+   
+      if (disp === 0) {
+        setDisp(value)
+      } else {
+        setDisp(String(disp) + value)
+      }
+
+      return
+    }
+
+  
+    if (
+      value === '+' ||
+      value === '−' ||
+      value === '*' ||
+      value === '÷'
+    ) {
+
+      
+      if (justCalculated) {
+        setOperand1(Number(disp))
+        setOperation(value)
+        setOperand2(null)
+        setWaitingForSecondNumber(true)
+        setJustCalculated(false)
+        return
+      }
+
+      
+      setOperand1(Number(disp))
+
+      
+      setOperation(value)
+
+     
+      setOperand2(null)
+
+     
+      setWaitingForSecondNumber(true)
+
+      return
+    }
+
+   
+    if (value === '=') {
+
+      if (operand1 !== null && operation !== null) {
+
+        const secondNumber = Number(disp)
+
+        setOperand2(secondNumber)
+
+        let result
+
+        if (operation === '+') {
+          result = operand1 + secondNumber
+        }
+
+        else if (operation === '−') {
+          result = operand1 - secondNumber
+        }
+
+        else if (operation === '*') {
+          result = operand1 * secondNumber
+        }
+
+        else if (operation === '÷') {
+
+          if (secondNumber === 0) {
+            setDisp('Error')
+            setOperand1(null)
+            setOperand2(null)
+            setOperation(null)
+            setWaitingForSecondNumber(false)
+            setJustCalculated(false)
+            return
+          }
+
+          result = operand1 / secondNumber
+        }
+
+      
+        setDisp(result)
+
+    
+        setOperand1(result)
+        setOperand2(null)
+        setOperation(null)
+
+        setWaitingForSecondNumber(false)
+        setJustCalculated(true)
+      }
+
+      return
+    }
+  }
+
+  
+  const clearButtonClickHandler = (e) => {
+    e.preventDefault()
+
+    setDisp(0)
+    setOperand1(null)
+    setOperand2(null)
+    setOperation(null)
+    setWaitingForSecondNumber(false)
+    setJustCalculated(false)
+  }
+
+ 
+  const nameButtonClickHandler = (e) => {
+    e.preventDefault()
+
+    setDisp('Cheenee Mandap')
   }
 
   return (
@@ -41,7 +177,7 @@ function App() {
 
       <div className="Calculator">
 
-        <CalcDisplay dispValue={displayValue} />
+        <CalcDisplay dispValue={disp} />
 
         <div className="Keypad">
 
@@ -81,7 +217,7 @@ function App() {
           />
 
           <CalcButton
-            buttonLabel="×"
+            buttonLabel="*"
             onClick={buttonClickHandler}
           />
 
@@ -108,7 +244,7 @@ function App() {
           <CalcButton
             buttonLabel="C"
             buttonClass="clear"
-            onClick={buttonClickHandler}
+            onClick={clearButtonClickHandler}
           />
 
           <CalcButton
@@ -129,9 +265,12 @@ function App() {
 
         </div>
 
-        <div className="name-button">
+        <button
+          className="name-button"
+          onClick={nameButtonClickHandler}
+        >
           MANDAP
-        </div>
+        </button>
 
       </div>
 
